@@ -16,7 +16,7 @@ import edu.miracostacollege.superheroesquiz.Model.CurrentSettings;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private RadioGroup settingsRadioGroup;
+
     private RadioButton names;
     private RadioButton oneThing;
     private RadioButton superpowers;
@@ -26,15 +26,15 @@ public class SettingsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        settingsRadioGroup = findViewById(R.id.settings);
         names = findViewById(R.id.names);
         oneThing = findViewById(R.id.oneThing);
         superpowers = findViewById(R.id.superpowers);
         currentQuizTypeTV = findViewById(R.id.currentSetting);
 
         Intent fromMain = getIntent();
-        fromMain.getExtras();
-        currentSettings = fromMain.getParcelableExtra("settings");
+        currentSettings = fromMain.getExtras().getParcelable("settings");
+        if (currentSettings == null)
+            System.out.println("It's going null upon getting intent");
 
         if (currentSettings.getQuizType()==CurrentSettings.QuizType.NAMES) {
             names.setChecked(true);
@@ -57,30 +57,31 @@ public class SettingsActivity extends AppCompatActivity {
 
 
 
-    public void settingsWindow(View v) {
 
-        settingsRadioGroup.setVisibility(View.VISIBLE);
-
-
-    }
     public void chooseSetting(View v) {
 
         Intent back = new Intent(this, MainActivity.class);
 
+        RadioButton rb = (RadioButton) v;
+
+        names.setChecked(false);
+        oneThing.setChecked(false);
+        superpowers.setChecked(false);
+        rb.setChecked(true);
+
+
         Handler handler = new Handler();
 
-        if (settingsRadioGroup.getCheckedRadioButtonId() == names.getId()) {
+        if (names.isChecked()) {
             currentSettings.setQuizType(CurrentSettings.QuizType.NAMES);
-        } else if (settingsRadioGroup.getCheckedRadioButtonId() == oneThing.getId()) {
+        } else if (oneThing.isChecked()) {
             currentSettings.setQuizType(CurrentSettings.QuizType.ONE_THING);
         }
-        else if (settingsRadioGroup.getCheckedRadioButtonId() == superpowers.getId()) {
+        else if (superpowers.isChecked()) {
             currentSettings.setQuizType(CurrentSettings.QuizType.SUPERPOWERS);
         }
 
         back.putExtra("settings", currentSettings);
-
-        settingsRadioGroup.setVisibility(View.INVISIBLE);
 
         handler.postDelayed(new Runnable() {
             @Override

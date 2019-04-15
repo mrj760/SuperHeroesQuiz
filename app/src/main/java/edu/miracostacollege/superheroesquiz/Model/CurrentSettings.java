@@ -30,6 +30,27 @@ public class CurrentSettings implements Parcelable {
         this.quizType = quizType;
     }
 
+    public int getIntFromQuizType() {
+        if (this.quizType==QuizType.NAMES)
+            return 0;
+        else if (this.quizType==QuizType.ONE_THING)
+            return 1;
+        else
+            return 2;
+    }
+
+    public QuizType getQuizTypeFromInt(int x) {
+        switch (x) {
+            case(1):
+                return QuizType.ONE_THING;
+            case(2):
+                return QuizType.SUPERPOWERS;
+            default:
+                return QuizType.NAMES;
+
+        }
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -37,12 +58,13 @@ public class CurrentSettings implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.quizType == null ? -1 : this.quizType.ordinal());
+        dest.writeInt(this.getIntFromQuizType());
     }
 
     private CurrentSettings(Parcel in) {
         int tmpQuizType = in.readInt();
-        this.quizType = tmpQuizType == -1 ? null : QuizType.values()[tmpQuizType];
+        this.quizType = getQuizTypeFromInt(tmpQuizType);
+        //this.quizType = QuizType.values()[tmpQuizType];
     }
 
     public static final Parcelable.Creator<CurrentSettings> CREATOR = new Parcelable.Creator<CurrentSettings>() {

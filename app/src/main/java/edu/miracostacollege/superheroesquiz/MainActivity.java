@@ -263,6 +263,9 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent settingsIntent = new Intent(this, SettingsActivity.class);
 
+        if (currentSettings==null)
+            System.out.println("It's null in  'OnOptionsItemSelected'");
+
         settingsIntent.putExtra("settings", currentSettings);
         startActivity(settingsIntent);
 
@@ -274,6 +277,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         Intent getNewSettings = getIntent();
         currentSettings = getNewSettings.getParcelableExtra("settings");
+        resetQuiz();
         super.onResume();
     }
 
